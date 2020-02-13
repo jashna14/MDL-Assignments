@@ -94,11 +94,12 @@ print(len(data_dic['test_data']))
 table = PrettyTable()
 table.field_names = ["Degree", "Bias", "Variance"]
 degree=[]
+total_error=[]	
 for i in range(max_degree):
-	table.add_row([ i+1,float(bias[i]),variance[i] ])
+	table.add_row([ i+1,float(bias[i]),variance[i]])
+	total_error.append(variance[i]+bias[i])
 	degree.append(i+1)
 print(table)
-
 fig, axs = plt.subplots(3,sharex=True)
 axs[0].plot(degree, bias)
 axs[0].set_ylabel("bias")
@@ -106,6 +107,7 @@ axs[1].plot(degree, variance)
 axs[1].set_ylabel("variance")
 axs[2].plot(degree,bias,label="bias")
 axs[2].plot(degree,variance,label="variance")
+axs[2].plot(degree,total_error,label="total error")
 plt.legend()
 axs[2].set_ylabel("bias-variance")
 axs[2].set_xlabel("Degree of Polynomial")
