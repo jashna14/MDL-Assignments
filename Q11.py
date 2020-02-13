@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
-from beautifultable import BeautifulTable
+from prettytable import PrettyTable
 
 
 
@@ -28,7 +28,7 @@ def get_data(data , test_set_ratio , train_set_cnt):
 def get_bias(prediction , actual , model_cnt):
 	sum = 0
 	for i in range(500):
-		sum += abs(actual[i] - np.mean(np.array(prediction)[:,i:i+1]))
+		sum += (actual[i] - np.mean(np.array(prediction)[:,i:i+1]))**2
 	return sum/500
 
 def get_variance(prediction, model_cnt):
@@ -62,7 +62,8 @@ bias = []
 variance = []
 train_data(data_dic , models_cnt , max_degree ,bias ,variance)
 
-# table = BeautifulTable()
-# heding = ['','Bias','Variance']
-# for i in range(10)
-
+table = PrettyTable()
+table.field_names = ["Degree", "Bias", "Variance"]
+for i in range(9):
+	table.add_row([i+1,bias[i],variance[i]])
+print(table)
