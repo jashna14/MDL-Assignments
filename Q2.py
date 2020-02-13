@@ -1,8 +1,7 @@
 import pickle
 import random
 import numpy as np
-import matplotlib as plt
-from matplotlib import plot
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -94,8 +93,20 @@ train_data(data_dic , models_cnt , max_degree ,bias ,variance)
 print(len(data_dic['test_data']))
 table = PrettyTable()
 table.field_names = ["Degree", "Bias", "Variance"]
+degree=[]
 for i in range(max_degree):
 	table.add_row([ i+1,float(bias[i]),variance[i] ])
+	degree.append(i+1)
 print(table)
 
-plt.plot(bias)
+fig, axs = plt.subplots(3,sharex=True)
+axs[0].plot(degree, bias)
+axs[0].set_ylabel("bias")
+axs[1].plot(degree, variance)
+axs[1].set_ylabel("variance")
+axs[2].plot(degree,bias,label="bias")
+axs[2].plot(degree,variance,label="variance")
+plt.legend()
+axs[2].set_ylabel("bias-variance")
+axs[2].set_xlabel("Degree of Polynomial")
+plt.show()
