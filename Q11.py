@@ -28,13 +28,14 @@ def get_bias(prediction , actual , model_cnt):
 	sum = 0
 	for i in range(len(actual)):
 		sum += (actual[i] - np.mean(np.array(prediction)[:,i:i+1]))**2
+	print(len(actual),len(prediction[1]))	
 	return sum/len(actual)
 
 def get_variance(prediction, model_cnt):
 	sum = 0
 	for i in range(len(prediction)):
 		sum += np.var(np.array(prediction)[:,i:i+1])
-	return sum/len(prediction)
+	return sum/len(prediction[1])
 
 def train_data(data_dic , models_cnt , max_degree ,bias ,variance):
 
@@ -57,6 +58,7 @@ with open('Q1_data/data.pkl', 'rb') as f:
 models_cnt =10
 max_degree = 9
 data_dic = get_data(data ,0.1 , models_cnt)
+
 bias = []
 variance = []
 train_data(data_dic , models_cnt , max_degree ,bias ,variance)
