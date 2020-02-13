@@ -9,12 +9,11 @@ from prettytable import PrettyTable
 
 
 def get_data(data , test_set_ratio , train_set_cnt):
-	train_data_total,test_data = train_test_split(data,test_size=test_set_ratio,random_state=42)
-
+	train_data_total,test_data = train_test_split(data,test_size=test_set_ratio)
 	size = int(len(train_data_total)/train_set_cnt)
 	train_data = []
 	for i in range(train_set_cnt - 1):
-		train_data_total,train_data_set = train_test_split(train_data_total,test_size=size,random_state=42)
+		train_data_total,train_data_set = train_test_split(train_data_total,test_size=size)
 		train_data.append(train_data_set)
 	train_data.append(train_data_total)
 
@@ -27,15 +26,15 @@ def get_data(data , test_set_ratio , train_set_cnt):
 
 def get_bias(prediction , actual , model_cnt):
 	sum = 0
-	for i in range(500):
+	for i in range(len(actual)):
 		sum += (actual[i] - np.mean(np.array(prediction)[:,i:i+1]))**2
-	return sum/500
+	return sum/len(actual)
 
 def get_variance(prediction, model_cnt):
 	sum = 0
-	for i in range(500):
+	for i in range(len(prediction)):
 		sum += np.var(np.array(prediction)[:,i:i+1])
-	return sum/500
+	return sum/len(prediction)
 
 def train_data(data_dic , models_cnt , max_degree ,bias ,variance):
 
@@ -64,6 +63,6 @@ train_data(data_dic , models_cnt , max_degree ,bias ,variance)
 
 table = PrettyTable()
 table.field_names = ["Degree", "Bias", "Variance"]
-for i in range(9):
-	table.add_row([i+1,bias[i],variance[i]])
+for i in range(max_degree):
+	table.add_row([ i+1,float(bias[i]),variance[i] ])
 print(table)
