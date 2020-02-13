@@ -28,7 +28,7 @@ def get_bias(prediction , actual , model_cnt):
 	sum = 0
 	for i in range(len(actual)):
 		sum += (actual[i] - np.mean(np.array(prediction)[:,i:i+1]))**2
-	print(len(actual),len(prediction[1]))	
+	# print(len(actual),len(prediction[1]))	
 	return sum/len(actual)
 
 def get_variance(prediction, model_cnt):
