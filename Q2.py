@@ -80,7 +80,10 @@ def train_data(data_dic , models_cnt , max_degree ,bias ,variance):
 			pred = model.predict(poly.fit_transform(data_dic['test_data'][:,0:1]))
 			prediction.append(pred)
 		bias.append(get_bias(prediction , data_dic['test_data'][:,1:2] , models_cnt))
-		variance.append(get_variance(prediction, models_cnt))	 
+		variance.append(get_variance(prediction, models_cnt))	
+		plt.scatter(data_dic['test_data'][:,0:1],data_dic['test_data'][:,1:2])
+		plt.scatter(data_dic['test_data'][:,0:1],prediction[0])
+		plt.show() 
 
 
 

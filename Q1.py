@@ -1,6 +1,7 @@
 import pickle
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -53,7 +54,10 @@ def train_data(data_dic , models_cnt , max_degree ,bias ,variance):
 			pred = model.predict(poly.fit_transform(data_dic['test_data'][:,0:1]))
 			prediction.append(pred)
 		bias.append(get_bias(prediction , data_dic['test_data'][:,1:2] , models_cnt))
-		variance.append(get_variance(prediction, models_cnt))	 
+		variance.append(get_variance(prediction, models_cnt))	
+		# plt.scatter(data_dic['test_data'][:,0:1],data_dic['test_data'][:,1:2])
+		# plt.scatter(data_dic['test_data'][:,0:1],prediction[0])
+		# plt.show() 
 
 
 
@@ -74,3 +78,7 @@ table.field_names = ["Degree", "Bias^2", "Variance","Bias"]
 for i in range(max_degree):
 	table.add_row([ i+1,float(bias[i]),variance[i],float(bias_real[i])])
 print(table)
+
+# print(data_dic["test_data"])
+# print("*****************************")
+# print(data_dic["test_data"][:,0:1])
