@@ -61,10 +61,13 @@ def get_bias(prediction , actual , model_cnt):
 
 
 def get_variance(prediction, model_cnt):
-	sum = 0
-	for i in range(len(prediction)):
-		sum += np.var(np.array(prediction)[:,i:i+1])
-	return sum/len(prediction[1])
+	# sum = 0
+	# for i in range(len(prediction)):
+	# 	sum += np.var(np.array(prediction)[:,i:i+1])
+	# return sum/len(prediction[1])
+
+	var=np.var(prediction,axis=0)
+	return np.sum(var)/len(prediction[1])
 
 
 def train_data(data_dic , models_cnt , max_degree ,bias ,variance):
@@ -92,23 +95,28 @@ variance = []
 train_data(data_dic , models_cnt , max_degree ,bias ,variance)
 print(len(data_dic['test_data']))
 table = PrettyTable()
-table.field_names = ["Degree", "Bias", "Variance"]
+table.field_names = ["Degree", "Bias^2", "Variance","Bias"]
 degree=[]
-total_error=[]	
+total_error=[]
+bias_real=np.sqrt(bias)	
 for i in range(max_degree):
-	table.add_row([ i+1,float(bias[i]),variance[i]])
+	table.add_row([ i+1,float(bias[i]),variance[i],float(bias_real[i])])
 	total_error.append(variance[i]+bias[i])
 	degree.append(i+1)
 print(table)
-fig, axs = plt.subplots(3,sharex=True)
-axs[0].plot(degree, bias)
-axs[0].set_ylabel("bias")
-axs[1].plot(degree, variance)
-axs[1].set_ylabel("variance")
-axs[2].plot(degree,bias,label="bias")
-axs[2].plot(degree,variance,label="variance")
-axs[2].plot(degree,total_error,label="total error")
+fig, axs = plt.subplots(2,2)
+axs[0][0].plot(degree, bias)
+axs[0][0].set_ylabel("bias^2")
+axs[0][1].plot(degree, variance)
+axs[0][1].set_ylabel("variance")
+axs[1][0].plot(degree, bias_real)
+axs[1][0].set_ylabel("bias")
+axs[1][0].set_xlabel("Degree of Polynomial")
+axs[1][1].plot(degree,bias,label="bias^2")
+axs[1][1].plot(degree,bias_real,label="bias")
+axs[1][1].plot(degree,variance,label="variance")
+# axs[2].plot(degree,total_error,label="total error")
 plt.legend()
-axs[2].set_ylabel("bias-variance")
-axs[2].set_xlabel("Degree of Polynomial")
+axs[1][1].set_ylabel("bias^2-variance")
+axs[1][1].set_xlabel("Degree of Polynomial")
 plt.show()

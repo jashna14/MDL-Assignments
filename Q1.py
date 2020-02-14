@@ -32,10 +32,16 @@ def get_bias(prediction , actual , model_cnt):
 	return sum/len(actual)
 
 def get_variance(prediction, model_cnt):
-	sum = 0
-	for i in range(len(prediction)):
-		sum += np.var(np.array(prediction)[:,i:i+1])
-	return sum/len(prediction[1])
+	# sum = 0
+	# for i in range(len(prediction)):
+	# 	sum += np.var(np.array(prediction)[:,i:i+1])
+	# print(np.array(prediction).shape)
+	# print(np.array(prediction)[:,i:i+1])
+	# print("**********************************")
+	# return sum/len(prediction[1])
+
+	var=np.var(prediction,axis=0)
+	return np.sum(var)/len(prediction[1])
 
 def train_data(data_dic , models_cnt , max_degree ,bias ,variance):
 
@@ -62,9 +68,9 @@ data_dic = get_data(data ,0.1 , models_cnt)
 bias = []
 variance = []
 train_data(data_dic , models_cnt , max_degree ,bias ,variance)
-
+bias_real=np.sqrt(bias)
 table = PrettyTable()
-table.field_names = ["Degree", "Bias", "Variance"]
+table.field_names = ["Degree", "Bias^2", "Variance","Bias"]
 for i in range(max_degree):
-	table.add_row([ i+1,float(bias[i]),variance[i] ])
+	table.add_row([ i+1,float(bias[i]),variance[i],float(bias_real[i])])
 print(table)
