@@ -33,14 +33,6 @@ def get_bias(prediction , actual , model_cnt):
 	return sum/len(actual)
 
 def get_variance(prediction, model_cnt):
-	# sum = 0
-	# for i in range(len(prediction)):
-	# 	sum += np.var(np.array(prediction)[:,i:i+1])
-	# print(np.array(prediction).shape)
-	# print(np.array(prediction)[:,i:i+1])
-	# print("**********************************")
-	# return sum/len(prediction[1])
-
 	var=np.var(prediction,axis=0)
 	return np.sum(var)/len(prediction[1])
 
