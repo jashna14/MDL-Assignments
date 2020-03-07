@@ -3,7 +3,7 @@ import numpy as np
 # U(t+1)(i) = max_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t)(j)]]
 # P(t+1)(i) = argmax_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t+1)(j)]]
 
-Penalty = -20
+Penalty = -5
 Gamma = 0.99
 Delta = 1e-3
 Final_reward = 10
@@ -246,7 +246,9 @@ iteration_cnt = 0
 value_iteration(Uprev,Ucurr,iteration_cnt)
 
 while(1):
+    
     cnt = check(Uprev,Ucurr)
+
     if(cnt == 60):
         exit(1)
     else:
