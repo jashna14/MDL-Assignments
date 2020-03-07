@@ -1,9 +1,23 @@
 import numpy as np
+import os
 
 # U(t+1)(i) = max_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t)(j)]]
 # P(t+1)(i) = argmax_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t+1)(j)]]
 
+
+if(os.path.exists("./outputs")):
+
+    open('./outputs/task_1_trace.txt', 'w').close()
+    open('./outputs/task_2_part_1_trace.txt', 'w').close()
+    open('./outputs/task_2_part_2_trace.txt', 'w').close()
+    open('./outputs/task_2_part_3_trace.txt', 'w').close()
+
+else:
+
+    os.mkdir("./outputs")
+
 Penalty = -20
+Penalty_shoot = -20
 Gamma = 0.99
 Delta = 1e-3
 Final_reward = 10
@@ -16,6 +30,7 @@ max_hero_stamina = 2
 Ucurr = np.zeros((5,4,3))
 Uprev = np.zeros((5,4,3))
 Reward = np.zeros((5,4,3))
+Reward_shoot = np.zeros((5,4,3))
 Policy = np.array([[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']]],dtype = 'object')
 
 for i in range(max_MD_health + 1):
@@ -26,10 +41,18 @@ for i in range(max_MD_health + 1):
             else:
                 Reward[i][j][k] = Penalty + Final_reward
 
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward_shoot[i][j][k] = Penalty_shoot
+            else:
+                Reward_shoot[i][j][k] = Penalty_shoot + Final_reward
+
 def reward_shoot(MD_health , arrows_cnt , hero_stamina):
     
     prob_hit = 0.5
-    return (prob_hit*Reward[MD_health-1][arrows_cnt-1][hero_stamina-1] + (1-prob_hit)*Reward[MD_health][arrows_cnt-1][hero_stamina-1])
+    return (prob_hit*Reward_shoot[MD_health-1][arrows_cnt-1][hero_stamina-1] + (1-prob_hit)*Reward_shoot[MD_health][arrows_cnt-1][hero_stamina-1])
 
 def reward_dodge(MD_health , arrows_cnt , hero_stamina):
     
@@ -156,18 +179,69 @@ def can_dodge(MD_health , arrows_cnt , hero_stamina):
     else:
         return 0
 
-def print_iteration(Ucurr , Policy , iteration_cnt):
+def print_iteration(Ucurr , Policy , iteration_cnt,num):
 
-    print()
-    print()
-    print('Iteration = ' + str(iteration_cnt))
+    # sr1="\n\n"
+    sr=('iteration=' + str(iteration_cnt)+'\n')
+    if(num==0):
+        f=open("./outputs/task_1_trace.txt","a")
+        f.write(sr)
+        f.close()
+    elif(num==1):
+        f=open("./outputs/task_2_part_1_trace.txt","a")
+        f.write(sr)
+        f.close()                
+    elif(num==2):
+        f=open("./outputs/task_2_part_2_trace.txt","a")
+        f.write(sr)
+        f.close()
+    else:
+        f=open("./outputs/task_2_part_3_trace.txt","a")
+        f.write(sr)
+        f.close()
+
     iteration_cnt += 1
     for i in range(max_MD_health + 1):
         for j in range(max_arrows_cnt + 1):
             for k in range(max_hero_stamina + 1):
-                print('(' + str(i) + ',' + str(j) + ',' + str(k) + ')' + ':' + str(Policy[i][j][k]) + '=' + '[' + str(round(Ucurr[i][j][k],3)) + ']')        
+                sr=('(' + str(i) + ',' + str(j) + ',' + str(k) + ')' + ':' + str(Policy[i][j][k]) + '=' + '[' + str(round(Ucurr[i][j][k],3)) + ']\n')     
 
-def value_iteration(Uprev , Ucurr , iteration_cnt):
+                if(num==0):
+                    f=open("./outputs/task_1_trace.txt","a")
+                    f.write(sr)
+                    f.close()
+                elif(num==1):
+                    f=open("./outputs/task_2_part_1_trace.txt","a")
+                    f.write(sr)
+                    f.close()                
+                elif(num==2):
+                    f=open("./outputs/task_2_part_2_trace.txt","a")
+                    f.write(sr)
+                    f.close()
+                else:
+                    f=open("./outputs/task_2_part_3_trace.txt","a")
+                    f.write(sr)
+                    f.close()
+
+    sr=('\n\n')
+    if(num==0):
+        f=open("./outputs/task_1_trace.txt","a")
+        f.write(sr)
+        f.close()
+    elif(num==1):
+        f=open("./outputs/task_2_part_1_trace.txt","a")
+        f.write(sr)
+        f.close()                
+    elif(num==2):
+        f=open("./outputs/task_2_part_2_trace.txt","a")
+        f.write(sr)
+        f.close()
+    else:
+        f=open("./outputs/task_2_part_3_trace.txt","a")
+        f.write(sr)
+        f.close()
+
+def value_iteration(Uprev , Ucurr , iteration_cnt,num):
     
     for i in range (max_MD_health + 1):
         for j in range(max_arrows_cnt + 1):
@@ -221,7 +295,7 @@ def value_iteration(Uprev , Ucurr , iteration_cnt):
                 else:
                     Policy[i][j][k] = '-1'                
 
-    print_iteration(Ucurr , Policy , iteration_cnt)
+    print_iteration(Ucurr , Policy , iteration_cnt,num)
 
 
 def check(Uprev, Ucurr):
@@ -243,21 +317,146 @@ def update(Uprev, Ucurr):
 
 
 iteration_cnt = 0
-value_iteration(Uprev,Ucurr,iteration_cnt)
+value_iteration(Uprev,Ucurr,iteration_cnt,0)
 
 while(1):
     
     cnt = check(Uprev,Ucurr)
 
     if(cnt == 60):
-        exit(1)
+        break
     else:
         iteration_cnt += 1
         update(Uprev,Ucurr)
-        value_iteration(Uprev,Ucurr,iteration_cnt)    
+        value_iteration(Uprev,Ucurr,iteration_cnt,0)    
+
+# print("*********************************************************NEXT***********************************************")
 
 
+Penalty=-2.5
+Penalty_shoot=-0.25
+
+Ucurr = np.zeros((5,4,3))
+Uprev = np.zeros((5,4,3))
+Reward = np.zeros((5,4,3))
+Reward_shoot = np.zeros((5,4,3))
+Policy = np.array([[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']]],dtype = 'object')
 
 
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward[i][j][k] = Penalty
+            else:
+                Reward[i][j][k] = Penalty + Final_reward
+
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward_shoot[i][j][k] = Penalty_shoot
+            else:
+                Reward_shoot[i][j][k] = Penalty_shoot + Final_reward
+
+iteration_cnt = 0
+value_iteration(Uprev,Ucurr,iteration_cnt,1)
+
+while(1):
+    
+    cnt = check(Uprev,Ucurr)
+
+    if(cnt == 60):
+        break
+    else:
+        iteration_cnt += 1
+        update(Uprev,Ucurr)
+        value_iteration(Uprev,Ucurr,iteration_cnt,1)    
+
+# print("*********************************************************NEXT***********************************************")
+
+Penalty=-2.5
+Penalty_shoot=-2.5
+Gamma=0.1
+
+Ucurr = np.zeros((5,4,3))
+Uprev = np.zeros((5,4,3))
+Reward = np.zeros((5,4,3))
+Reward_shoot = np.zeros((5,4,3))
+Policy = np.array([[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']]],dtype = 'object')
+
+
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward[i][j][k] = Penalty
+            else:
+                Reward[i][j][k] = Penalty + Final_reward
+
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward_shoot[i][j][k] = Penalty_shoot
+            else:
+                Reward_shoot[i][j][k] = Penalty_shoot + Final_reward
+
+iteration_cnt = 0
+value_iteration(Uprev,Ucurr,iteration_cnt,2)
+
+while(1):
+    
+    cnt = check(Uprev,Ucurr)
+
+    if(cnt == 60):
+        break
+    else:
+        iteration_cnt += 1
+        update(Uprev,Ucurr)
+        value_iteration(Uprev,Ucurr,iteration_cnt,2)    
+
+# print("*********************************************************NEXT***********************************************")
+
+Delta=1e-10 
+
+Ucurr = np.zeros((5,4,3))
+Uprev = np.zeros((5,4,3))
+Reward = np.zeros((5,4,3))
+Reward_shoot = np.zeros((5,4,3))
+Policy = np.array([[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']]],dtype = 'object')
+
+
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward[i][j][k] = Penalty
+            else:
+                Reward[i][j][k] = Penalty + Final_reward
+
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
+            if(i != 0):
+                Reward_shoot[i][j][k] = Penalty_shoot
+            else:
+                Reward_shoot[i][j][k] = Penalty_shoot + Final_reward
+
+iteration_cnt = 0
+value_iteration(Uprev,Ucurr,iteration_cnt,3)
+
+while(1):
+    
+    cnt = check(Uprev,Ucurr)
+
+    if(cnt == 60):
+        break
+    else:
+        iteration_cnt += 1
+        update(Uprev,Ucurr)
+        value_iteration(Uprev,Ucurr,iteration_cnt,3)    
+
+# print("*********************************************************NEXT***********************************************")
 
 

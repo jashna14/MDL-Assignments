@@ -4,9 +4,9 @@ import numpy as np
 # P(t+1)(i) = argmax_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t+1)(j)]]
 
 Penalty = -2.5
-Penalty_shoot = -0.25
-Gamma = 0.99
-Delta = 1e-3
+Penalty_shoot = -2.5
+Gamma = 0.1
+Delta = 1e-10
 Final_reward = 10
 
 max_MD_health = 4
