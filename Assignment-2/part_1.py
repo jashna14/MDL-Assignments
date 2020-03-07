@@ -3,7 +3,7 @@ import numpy as np
 # U(t+1)(i) = max_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t)(j)]]
 # P(t+1)(i) = argmax_A[R(i,A) + gamma * SIGMA [P(j| i,A) * U(t+1)(j)]]
 
-Penalty = -5
+Penalty = -20
 Gamma = 0.99
 Delta = 1e-3
 Final_reward = 10
@@ -18,9 +18,9 @@ Uprev = np.zeros((5,4,3))
 Reward = np.zeros((5,4,3))
 Policy = np.array([[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']],[['a','a','a'],['a','a','a'],['a','a','a'],['a','a','a']]],dtype = 'object')
 
-for i in range(max_MD_health):
-    for j in range(max_arrows_cnt):
-        for k in range(max_hero_stamina):
+for i in range(max_MD_health + 1):
+    for j in range(max_arrows_cnt + 1):
+        for k in range(max_hero_stamina + 1):
             if(i != 0):
                 Reward[i][j][k] = Penalty
             else:
@@ -158,12 +158,14 @@ def can_dodge(MD_health , arrows_cnt , hero_stamina):
 
 def print_iteration(Ucurr , Policy , iteration_cnt):
 
+    print()
+    print()
     print('Iteration = ' + str(iteration_cnt))
     iteration_cnt += 1
     for i in range(max_MD_health + 1):
         for j in range(max_arrows_cnt + 1):
             for k in range(max_hero_stamina + 1):
-                print('(' + str(i) + ',' + str(j) + ',' + str(k) + ')' + ':' + str(Policy[i][j][k]) + '=' + '[' + str(Ucurr[i][j][k]) + ']')        
+                print('(' + str(i) + ',' + str(j) + ',' + str(k) + ')' + ':' + str(Policy[i][j][k]) + '=' + '[' + str(round(Ucurr[i][j][k],3)) + ']')        
 
 def value_iteration(Uprev , Ucurr , iteration_cnt):
     
@@ -245,7 +247,6 @@ value_iteration(Uprev,Ucurr,iteration_cnt)
 
 while(1):
     cnt = check(Uprev,Ucurr)
-    print(cnt)
     if(cnt == 60):
         exit(1)
     else:
